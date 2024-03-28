@@ -1,0 +1,107 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tree-defender"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Mikołaj Lewandowski", email = "mikolevy1@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "fastapi", "uvicorn[standard]"
+]
+
+[project.urls]
+Documentation = "https://github.com/unknown/tree-defender#readme"
+Issues = "https://github.com/unknown/tree-defender/issues"
+Source = "https://github.com/unknown/tree-defender"
+
+[tool.hatch.version]
+path = "src/tree_defender/__about__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+  "ruff",
+  "mypy>=1.0.0",
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+sort = "ruff check --select I --fix"
+lint = "ruff check"
+check-format = "ruff format --check"
+only-format = "ruff format"
+full-format = [
+  "sort",
+  "only-format",
+]
+ff = "full-format"
+type-check = "mypy --strict --install-types --non-interactive {args:be/src/tree_defender}"
+tc = "type-check"
+checks = [
+  "lint",
+  "check-format",
+  "type-check"
+]
+ck = "checks"
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+[tool.hatch.envs.types]
+dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+
+
+[tool.coverage.run]
+source_pkgs = ["tree_defender", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/tree_defender/__about__.py",
+]
+
+[tool.coverage.paths]
+tree_defender = ["src/tree_defender", "*/tree-defender/src/tree_defender"]
+tests = ["tests", "*/tree-defender/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+line-length = 120
+lint.extend-select = ["I"]
